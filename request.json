@@ -1,0 +1,23 @@
+{
+    "vms": [
+      {
+        "machineName": "VM-1",
+        "applicationName": "keycloak",
+        "applicationURL": "https://reqbin.com/echo/get/json",
+        "requestType" : "post",
+        "body" : {
+            "Id": 78912,
+            "Customer": "Jason Sweet",
+            "Quantity": 1,
+            "Price": 18.00 
+        }
+      },
+      {
+        "machineName": "VM-2",
+        "applicationName": "dashboard",
+        "applicationURL": "https://reqbin.com/echo/get/json",
+        "requestType" : "get",
+        "body" : null
+      } 
+    ]
+  }
