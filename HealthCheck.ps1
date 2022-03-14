@@ -1,11 +1,9 @@
 ﻿Write-Host "Health Check Validation"
-$scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 function getcall([string]$url) {
     try 
     {
         $responseData = Invoke-WebRequest -Uri $url 
-        $statusCode = [int]$responseData.StatusCode
-        return $statusCode
+        return [int]$responseData.StatusCode
     }
     catch 
     {
@@ -21,14 +19,8 @@ function callpost([string]$url,[string]$body) {
             "Accept"="application/json"
             "Content-Type"="application/json"
         } 
-        Write-Host $url
-        Write-Host "aa" 
         $responseData = Invoke-RestMethod -Uri $url -Method POST -Body $body -Headers $header
- 
-        Write-Host "aa"   $responseData
-        $statusCode = [int]$responseData.StatusCode
-        return $statusCode
-
+        return [int]$responseData.StatusCode
     }
     catch 
     {
@@ -37,49 +29,44 @@ function callpost([string]$url,[string]$body) {
    
 }
 
-function Send-Email([string]$bodyContent) {
-    $from = "sanjeewa.senevirathna@mcmedisoft.com"
-    $to = "sanjeewa.senevirathna@mcmedisoft.com”
-    $cc = "stephan.desilva@mcmedisoft.com"
-    $attachment = $scriptPath+"\azureVM.jpg"
-    $subject = "Health Check"
+function Send-Email([string]$from,[string]$to,[string]$cc,[string]$attachment,
+[string]$subject,[string]$bodyContent,[string]$smtpServer,[string]$smtpPort,[string]$password) {
+    
+    $attachmentPath = ".\"+ $attachment
     $body = "<h1>Server Status!</h1><br><br>"
     $body += "<p><strong>First Call:</strong> $bodyContent </p>”
-    #$body += " <p><strong>Second Call:</strong> $bodyContent2 </p>”
-    $smtpServer = "smtp.office365.com"
-    $smtpPort = "587"
-    $password = ConvertTo-SecureString "Dn5vlPP6" -AsPlainText -Force
-    $creds = New-Object System.Management.Automation.PSCredential ($from, $password)
+    $secureString = ConvertTo-SecureString $password -AsPlainText -Force
+    $creds = New-Object System.Management.Automation.PSCredential ($from, $secureString)
 
-    Send-MailMessage -From $From -to $To -Cc $Cc -Subject $Subject -Body $Body -BodyAsHtml -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential $creds -Attachments $Attachment
+    Send-MailMessage -From $From -to $To -Cc $Cc -Subject $Subject -Body $Body -BodyAsHtml -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential $creds -Attachments $attachmentPath
 }
 
 
-$json = Get-Content $scriptPath"\request.json" | Out-String | ConvertFrom-Json
+$configJson = Get-Content ".\config.json" | Out-String | ConvertFrom-Json
 
 $array = @()
 
-ForEach ($object in $json){
-    $responseResult
-    
-    ForEach ($values in $object.vms){
-        Write-Host  $values.machineName
-        if ($values.requestType -eq "get") {
-            $data1 = getcall -url $values.applicationURL
-            $array +=  -join ("1st Endpoint - " , $values.machineName," - ",$values.applicationName," - ",$data1);
-            Write-Host $data1
+ForEach ($values in $configJson.vmList){
+    Write-Host xsss  $values.name
+    ForEach ($appList in $values.applicationList){
+
+        if ($appList.requestType -eq "get") {
+            $data1 = getcall $appList.applicationURL
+            $array +=  -join ("1st Endpoint - " , $appList.machineName," - ",$appList.applicationName," - ",$data1);
         }
-        if (($values.requestType -eq "post") -and ($data1 -ne 200 )) {
-            $data2 = callpost -url $values.applicationURL -body $values.body
-            $array +=  -join ("2st Endpoint - " ,  $values.machineName," - ",$values.applicationName," - ",$data2);
-            Write-Host $data2
+        if (($appList.requestType -eq "post") -and ($data1 -ne 200 )) {
+            $data2 = callpost $appList.applicationURL $appList.body
+            $array +=  -join ("2st Endpoint - " ,  $appList.machineName," - ",$appList.applicationName," - ",$data2);
         }
-        Write-Host "*****************************"
     }
 }
 
 $body = $array -join "`n"
-Send-Email -bodyContent $body
+Write-Host $body
+#Send-Email -bodyContent $body
+
+
+
 
 
 
