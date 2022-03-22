@@ -29,45 +29,48 @@ function callpost([string]$url,[string]$body) {
    
 }
 
-function Send-Email([string]$from,[string]$to,[string]$cc,[string]$attachment,
-[string]$subject,[string]$bodyContent,[string]$smtpServer,[string]$smtpPort,[string]$password) {
-    
-    $attachmentPath = ".\"+ $attachment
-    $body = "<h1>Server Status!</h1><br><br>"
-    $body += "<p><strong>First Call:</strong> $bodyContent </p>”
-    $secureString = ConvertTo-SecureString $password -AsPlainText -Force
-    $creds = New-Object System.Management.Automation.PSCredential ($from, $secureString)
 
-    Send-MailMessage -From $From -to $To -Cc $Cc -Subject $Subject -Body $Body -BodyAsHtml -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential $creds -Attachments $attachmentPath
-}
 
 
 $configJson = Get-Content ".\config.json" | Out-String | ConvertFrom-Json
 
-$array = @()
+$emailContent = @()
+
 
 ForEach ($values in $configJson.vmList){
-    Write-Host xsss  $values.name
+    Write-Host $values.name
+    $status = $false
     ForEach ($appList in $values.applicationList){
-
-        if ($appList.requestType -eq "get") {
+        
+        if (($appList.requestType -eq "get") -and ($status -eq $false)) {
             $data1 = getcall $appList.applicationURL
-            $array +=  -join ("1st Endpoint - " , $appList.machineName," - ",$appList.applicationName," - ",$data1);
+            Write-Host $data1 
+            if($data1 -eq 200){
+                $status = $true
+                $emailContent +=  -join ("VM - " , $values.name," - ",$appList.applicationName," - ",$data1);
+            }     
         }
-        if (($appList.requestType -eq "post") -and ($data1 -ne 200 )) {
+        if (($appList.requestType -eq "post") -and ($status -eq $false)) {
             $data2 = callpost $appList.applicationURL $appList.body
-            $array +=  -join ("2st Endpoint - " ,  $appList.machineName," - ",$appList.applicationName," - ",$data2);
+            Write-Host $data2 
+            if($data2 -eq 200){
+                $status = $true
+                $emailContent +=  -join ("VM - " , $values.name," - ",$appList.machineName," - ",$appList.applicationName," - ",$data2);
+            }  
         }
     }
 }
 
-$body = $array -join "`n"
-Write-Host $body
-#Send-Email -bodyContent $body
+$body = $emailContent -join "`n"
+Write-Host $emailContent
+
+ForEach ($values in $configJson.email){
+    & .\SendEmail.ps1 $values.from $values.to $values.cc $values.attachment $values.subject $emailContent $values.config.smtpServer $values.config.smtpPort $values.config.password
+}
 
 
 
-
+ 
 
 
  
