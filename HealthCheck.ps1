@@ -66,6 +66,7 @@ Write-Host $emailContent
 
 ForEach ($values in $configJson.email){
     & .\SendEmail.ps1 $values.from $values.to $values.cc $values.attachment $values.subject $emailContent $values.config.smtpServer $values.config.smtpPort $values.config.password
+    & .\UpdateTeams.ps1 $values.subject $emailContent
 }
 
 

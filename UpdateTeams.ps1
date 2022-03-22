@@ -1,30 +1,23 @@
 
-
-$message1 = $args[0]
-$message2 = $args[1]
-
-Write-Host  $name
+$message = $args[1]
+$title = $args[0]
 
 $JSONBody = [PSCustomObject][Ordered]@{
     "@type"      = "MessageCard"
     "@context"   = "<http://schema.org/extensions>"
-    "summary"    = "Locked: $($LockedUser.SamAccountName)"
+    "summary"    = "$($title)"
     "themeColor" = '0078D7'
-    "title"      = "User locked"
-    "text"       = "`n 
-    SamAccountName: $message1,
-    Content: $message2
-    "
+    "title"      = "$title" #Databasename - from - VM name
+    "text"       = "<pre>$message)</pre>"
 }
     
 $TeamMessageBody = ConvertTo-Json $JSONBody
     
 $parameters = @{
-    "URI"         = "https://mcmedisoft.webhook.office.com/webhookb2/06fb8099-0ba8-4489-bdaf-3019f866b30e@da61d295-318e-423e-9958-f2fbb0538f98/IncomingWebhook/4998923144834a9e83efac05c4e433b9/e8f8db86-c7b9-4ed8-b4b4-1aa39bf7e198"
+    "URI"         = "https://mcmedisoft.webhook.office.com/webhookb2/4c82e0c8-94e7-47c8-af39-66f6d43013f2@da61d295-318e-423e-9958-f2fbb0538f98/IncomingWebhook/338b4be93fa9458b8a5706b9a770bf9e/264680c0-a853-4195-871d-336e4c2a16d8"
     "Method"      = 'POST'
     "Body"        = $TeamMessageBody
     "ContentType" = 'application/json'
 }
     
 Invoke-RestMethod @parameters
-
