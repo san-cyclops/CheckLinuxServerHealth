@@ -1,36 +1,4 @@
 ﻿Write-Host "Health Check Validation"
-function getcall([string]$url) {
-    try 
-    {
-        $responseData = Invoke-WebRequest -Uri $url 
-        return [int]$responseData.StatusCode
-    }
-    catch 
-    {
-        return [int]$_.Exception.Response.StatusCode
-    }
-   
-}
-
-function callpost([string]$url,[string]$body) {
-    try 
-    {
-        $header = @{
-            "Accept"="application/json"
-            "Content-Type"="application/json"
-        } 
-        $responseData = Invoke-RestMethod -Uri $url -Method POST -Body $body -Headers $header
-        return [int]$responseData.StatusCode
-    }
-    catch 
-    {
-        return [int]$_.Exception.Response.StatusCode
-    }
-   
-}
-
-
-
 
 $configJson = Get-Content ".\config.json" | Out-String | ConvertFrom-Json
 
@@ -43,7 +11,7 @@ ForEach ($values in $configJson.vmList){
     ForEach ($appList in $values.applicationList){
         
         if (($appList.requestType -eq "get") -and ($status -eq $false)) {
-            $data1 = getcall $appList.applicationURL
+            $data1 = & .\getcall.ps1 $appList.applicationURL
             Write-Host $data1 
             if($data1 -eq 200){
                 $status = $true
@@ -51,7 +19,7 @@ ForEach ($values in $configJson.vmList){
             }     
         }
         if (($appList.requestType -eq "post") -and ($status -eq $false)) {
-            $data2 = callpost $appList.applicationURL $appList.body
+            $data2 = & .\postcall.ps1 $appList.applicationURL $appList.body
             Write-Host $data2 
             if($data2 -eq 200){
                 $status = $true
