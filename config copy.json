@@ -1,0 +1,61 @@
+{
+  "email": {
+    "from": "sanjeewa.senevirathna@mcmedisoft.com",
+    "to": "sanjeewa.senevirathna@mcmedisoft.com",
+    "cc": "stephan.desilva@mcmedisoft.com",
+    "attachment": "azureVM.jpg",
+    "subject": "Health Check",
+    "config": {
+      "smtpServer": "smtp.office365.com",
+      "smtpPort": 587,
+      "password": "Dn5vlPP6"
+    }
+  },
+  "vmList": [
+    {
+      "name": "VM-1",
+      "applicationList": [
+        {
+          "applicationName": "Jasper-Dev",
+          "applicationURL": "https://104.211.226.117:8083/dev_saga_reporting/rest_v2/serverInfo",
+          "requestType": "get",
+          "body": null
+        },
+        {
+          "applicationName": "keycloak",
+          "applicationURL": "https://reqbin.com/echo/post/json",
+          "requestType": "post",
+          "body": {
+            "Id": 78912,
+            "Customer": "Jason Sweet",
+            "Quantity": 1,
+            "Price": 18.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "VM-2",
+      "applicationList": [
+        {
+          "applicationName": "keycloak",
+          "applicationURL": "https://reqbin.com/echo/post/json",
+          "requestType": "post",
+          "body": {
+            "Id": 78912,
+            "Customer": "Jason Sweet",
+            "Quantity": 1,
+            "Price": 18.0
+          }
+        },
+        {
+          "applicationName": "dashboard",
+          "applicationURL": "https://reqbin.com/echo/get/json",
+          "requestType": "get",
+          "body": null
+        }
+
+      ]
+    }
+  ]
+}

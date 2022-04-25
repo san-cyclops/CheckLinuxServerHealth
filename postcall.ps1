@@ -6,7 +6,8 @@ try
         "Accept"="application/json"
         "Content-Type"="application/json"
     } 
-    $responseData = Invoke-RestMethod -Uri $url -Method POST -Body $body -Headers $header
+    $responseData = Invoke-RestMethod -Uri $url -Method POST -Body $body -Headers $header -SkipCertificateCheck 
+        
     return [int]$responseData.StatusCode
 }
 catch 

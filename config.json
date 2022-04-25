@@ -13,49 +13,15 @@
   },
   "vmList": [
     {
-      "name": "VM-1",
+      "name": "Sl-dev-(int-vm/fe-vm)",
       "applicationList": [
         {
-          "applicationName": "dashboard",
-          "applicationURL": "https://reqbin.com/echo/get/json",
-          "requestType": "get",
-          "body": null
-        },
-        {
-          "applicationName": "keycloak",
-          "applicationURL": "https://reqbin.com/echo/post/json",
-          "requestType": "post",
-          "body": {
-            "Id": 78912,
-            "Customer": "Jason Sweet",
-            "Quantity": 1,
-            "Price": 18.0
-          }
-        }
-      ]
-    },
-    {
-      "name": "VM-2",
-      "applicationList": [
-        {
-          "applicationName": "keycloak",
-          "applicationURL": "https://reqbin.com/echo/post/json",
-          "requestType": "post",
-          "body": {
-            "Id": 78912,
-            "Customer": "Jason Sweet",
-            "Quantity": 1,
-            "Price": 18.0
-          }
-        },
-        {
-          "applicationName": "dashboard",
-          "applicationURL": "https://reqbin.com/echo/get/json",
+          "applicationName": "Jasper-Dev",
+          "applicationURL": "https://104.211.226.117:8083/dev_saga_reporting/rest_v2/serverInfo",
           "requestType": "get",
           "body": null
         }
-
       ]
-    }
+    }    
   ]
 }
