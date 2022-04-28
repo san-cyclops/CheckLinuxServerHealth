@@ -14,6 +14,7 @@
   "vmList": [
     {
       "name": "Sl-dev-(int-vm/fe-vm)",
+      "verificatonType" : "url",
       "applicationList": [
         {
           "applicationName": "Jasper-Dev",
@@ -22,6 +23,23 @@
           "body": null
         }
       ]
-    }    
+    } ,
+    {
+      "name": "Sl-dev-int-vm",
+      "verificatonType" : "url",
+      "applicationList": [
+        {
+          "applicationName": "Keycloak",
+          "applicationURL": "https://icta.mcmedisoft.com/icta/auth/realms/master/protocol/openid-connect/certs",
+          "requestType": "get",
+          "body": null
+        }
+      ]
+    },
+    {
+      "name": "Sl-dev-vm",
+      "verificatonType" : "ssh",
+      "serverip": "104.211.226.117"
+    }       
   ]
 }
