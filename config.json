@@ -4,7 +4,7 @@
     "to": "sanjeewa.senevirathna@mcmedisoft.com",
     "cc": "stephan.desilva@mcmedisoft.com",
     "attachment": "azureVM.jpg",
-    "subject": "Health Check",
+    "subject": "VM Health Check",
     "config": {
       "smtpServer": "smtp.office365.com",
       "smtpPort": 587,
